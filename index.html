@@ -587,10 +587,9 @@ dropzone.addEventListener('drop', e => {
 fileInput.addEventListener('change', () => handleFiles([...fileInput.files]));
 
 async function handleFiles(newFiles) {
+  const validExts = /\.(jpe?g|png|gif|webp|tiff?|bmp|heic|heif|avif)$/i;
   const imgs = newFiles.filter(f =>
-    f.type.startsWith('image/') ||
-    f.name.toLowerCase().endsWith('.heic') ||
-    f.type === 'image/heic' || f.type === 'image/heif'
+    f.type.startsWith('image/') || validExts.test(f.name)
   );
   if (!imgs.length) return;
 
