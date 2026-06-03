@@ -468,22 +468,25 @@ async function handleFiles(newFiles) {
   const imgs = newFiles.filter(f => f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp|tiff?|bmp|avif)$/i.test(f.name));
   if (!imgs.length) return;
   for (const f of imgs) {
-    const dateObj = await readExifDate(f);
-    f._exifDateObj = dateObj;
-    f._exifDate = formatStampDate(dateObj, true);
-    addFileItem(f, f._exifDate);
+    const exifDate = await readExifDate(f);
+    f._exifDateObj = exifDate || new Date(f.lastModified);
+    f._dateSource  = exifDate ? 'exif' : 'modified';
+    f._exifDate    = formatStampDate(f._exifDateObj, true);
+    addFileItem(f, f._exifDate, f._dateSource);
     files.push(f);
   }
   processBtn.disabled = false;
 }
 
-function addFileItem(f, date) {
+function addFileItem(f, date, source) {
   const div = document.createElement('div');
   div.className = 'file-item';
+  const dotClass = source === 'exif' ? '' : 'no-exif';
+  const label    = source === 'exif' ? date : `${date} (modified)`;
   div.innerHTML = `
-    <div class="dot ${date ? '' : 'no-exif'}"></div>
+    <div class="dot ${dotClass}"></div>
     <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>
-    <span>${date || 'no EXIF'}</span>
+    <span>${label}</span>
   `;
   fileList.appendChild(div);
 }
