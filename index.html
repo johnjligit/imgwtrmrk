@@ -448,6 +448,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download
         </div>
+        <div style="margin-bottom:12px;">
+          <button class="btn btn-primary" id="download-all-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download all
+          </button>
+        </div>
         <div id="download-links" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
       </div>
     </div>
@@ -464,6 +470,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ──────────────────────────────────────────────────────────────────
    PhotoStamp — browser-side logic
@@ -777,7 +784,31 @@ async function showPreview(idx) {
   previewCounter.textContent = `${idx + 1} / ${processedBlobs.length}  —  ${processedBlobs[idx].name}`;
 }
 
-document.getElementById('prev-btn').addEventListener('click', () => {
+document.getElementById('download-all-btn').addEventListener('click', async () => {
+  if (!processedBlobs.length) return;
+  const btn = document.getElementById('download-all-btn');
+  btn.disabled = true;
+  btn.textContent = 'Zipping…';
+
+  const zip = new JSZip();
+  for (const { name, blob } of processedBlobs) {
+    const safeName = `stamped_${name.replace(/\.heic$/i, '.jpg')}`;
+    zip.file(safeName, blob);
+  }
+
+  const zipBlob = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(zipBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'stamped_photos.zip';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  btn.disabled = false;
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download all`;
+});
+
+
   previewIndex = Math.max(0, previewIndex - 1);
   showPreview(previewIndex);
 });
