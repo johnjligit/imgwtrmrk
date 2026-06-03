@@ -4,8 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>PhotoStamp — Date & Photographer Watermarker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -25,9 +24,9 @@
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: Arial, sans-serif;
     background: var(--bg);
-    color: var(--text);
+    color: #ffffff;
     min-height: 100vh;
     line-height: 1.6;
   }
@@ -57,7 +56,8 @@
   }
 
   .logo {
-    font-family: 'DM Serif Display', serif;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
     font-size: clamp(2.4rem, 6vw, 3.8rem);
     letter-spacing: -0.02em;
     line-height: 1;
@@ -89,7 +89,8 @@
     padding: 24px;
   }
   .card-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
     font-size: 1.15rem;
     color: var(--accent);
     margin-bottom: 16px;
@@ -116,10 +117,9 @@
     border-radius: 6px;
     color: var(--text);
     padding: 9px 12px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 0.95rem;
     outline: none;
-    transition: border-color 0.2s;
     margin-bottom: 14px;
   }
   input[type="text"]:focus, select:focus {
@@ -164,7 +164,7 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 6px 10px;
-    font-family: 'DM Mono', monospace;
+    font-family: Arial, monospace;
     font-size: 0.78rem;
   }
   .file-item .dot {
@@ -181,7 +181,7 @@
   }
   #preview-wrap.visible { display: block; }
   #preview-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: Arial, sans-serif; font-weight: bold;
     font-size: 1.1rem; color: var(--accent);
     margin-bottom: 12px;
   }
@@ -211,7 +211,7 @@
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     border: none; border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 0.92rem; font-weight: 500;
     padding: 11px 22px; cursor: pointer;
     transition: all 0.18s;
@@ -288,14 +288,14 @@
     border-bottom: 1px solid var(--border);
     padding: 10px 16px;
     display: flex; align-items: center; gap: 8px;
-    font-family: 'DM Mono', monospace;
+    font-family: Arial, monospace;
     font-size: 0.78rem;
     color: var(--muted);
   }
   .cli-dot { width: 10px; height: 10px; border-radius: 50%; }
   pre {
     padding: 20px;
-    font-family: 'DM Mono', monospace;
+    font-family: Arial, monospace;
     font-size: 0.85rem;
     line-height: 1.7;
     overflow-x: auto;
@@ -317,7 +317,7 @@
     padding: 16px;
   }
   .step-num {
-    font-family: 'DM Serif Display', serif;
+    font-family: Arial, sans-serif; font-weight: bold;
     font-size: 2rem;
     color: var(--border);
     line-height: 1;
@@ -347,7 +347,7 @@
 
   <header>
     <div class="logo">Photo<span>Stamp</span></div>
-    <div class="tagline">Overlay EXIF date/time onto photos — right in the browser, no upload needed.</div>
+    <div class="tagline">Overlay EXIF date/time &amp; your name onto photos — right in the browser, no upload needed.</div>
   </header>
 
   <!-- ════════════════════════ BROWSER TOOL ════════════════════════ -->
@@ -407,9 +407,9 @@
       </div>
 
       <div class="dropzone" id="dropzone">
-        <input type="file" id="file-input" accept="image/*" multiple />
+        <input type="file" id="file-input" accept="image/*,.heic,.HEIC" multiple />
         <div class="dropzone-icon">🖼️</div>
-        <div class="dropzone-text"><strong>Click or drag images here</strong><br>JPG, PNG, TIFF, WebP supported</div>
+        <div class="dropzone-text"><strong>Click or drag images here</strong><br>JPG, PNG, TIFF, WebP, HEIC supported</div>
       </div>
 
       <div id="file-list"></div>
@@ -463,6 +463,7 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
 <script>
 /* ──────────────────────────────────────────────────────────────────
    PhotoStamp — browser-side logic
@@ -579,26 +580,57 @@ dropzone.addEventListener('drop', e => {
 fileInput.addEventListener('change', () => handleFiles([...fileInput.files]));
 
 async function handleFiles(newFiles) {
-  const imgs = newFiles.filter(f => f.type.startsWith('image/'));
+  const imgs = newFiles.filter(f =>
+    f.type.startsWith('image/') ||
+    f.name.toLowerCase().endsWith('.heic') ||
+    f.type === 'image/heic' || f.type === 'image/heif'
+  );
   if (!imgs.length) return;
-  files.push(...imgs);
+
   for (const f of imgs) {
-    const date = await readExifDate(f);
-    f._exifDate = date;
-    addFileItem(f, date);
+    let processFile = f;
+    // Convert HEIC to JPEG
+    if (f.name.toLowerCase().endsWith('.heic') || f.type === 'image/heic' || f.type === 'image/heif') {
+      try {
+        addFileItem(f, null, true); // show converting state
+        const converted = await heic2any({ blob: f, toType: 'image/jpeg', quality: 0.93 });
+        const jpegBlob = Array.isArray(converted) ? converted[0] : converted;
+        processFile = new File([jpegBlob], f.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' });
+        processFile._originalName = f.name;
+      } catch(e) {
+        console.error('HEIC conversion failed:', e);
+        continue;
+      }
+    }
+    const date = await readExifDate(processFile);
+    processFile._exifDate = date;
+    if (!processFile._originalName) addFileItem(processFile, date);
+    else updateFileItem(processFile._originalName, date);
+    files.push(processFile);
   }
-  processBtn.disabled = false;
+  processBtn.disabled = files.length === 0;
 }
 
-function addFileItem(f, date) {
+function addFileItem(f, date, converting = false) {
   const div = document.createElement('div');
   div.className = 'file-item';
+  div.id = `fi-${f.name}`;
   div.innerHTML = `
     <div class="dot ${date ? '' : 'no-exif'}"></div>
     <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>
-    <span>${date || 'no EXIF'}</span>
+    <span>${converting ? '⏳ converting…' : (date || 'no EXIF')}</span>
   `;
   fileList.appendChild(div);
+}
+
+function updateFileItem(originalName, date) {
+  const jpgName = originalName.replace(/\.heic$/i, '.jpg');
+  const div = document.getElementById(`fi-${originalName}`);
+  if (div) {
+    div.querySelector('.dot').className = `dot ${date ? '' : 'no-exif'}`;
+    div.querySelector('span:first-of-type').textContent = jpgName;
+    div.querySelectorAll('span')[1].textContent = date || 'no EXIF';
+  }
 }
 
 clearBtn.addEventListener('click', () => {
@@ -629,7 +661,7 @@ function stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity) {
   ctx.textBaseline = 'top';
 
   const lines = [
-    dateStr || 'Date/time: not available',
+    dateStr || 'Date/time: not available'
   ];
 
   const lineWidths = lines.map(l => ctx.measureText(l).width);
