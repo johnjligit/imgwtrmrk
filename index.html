@@ -31,7 +31,6 @@
     line-height: 1.6;
   }
 
-  /* ── Noise texture overlay ── */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -41,7 +40,6 @@
     opacity: 0.5;
   }
 
-  /* ── Layout ── */
   .wrap {
     position: relative; z-index: 1;
     max-width: 900px;
@@ -49,7 +47,6 @@
     padding: 0 24px;
   }
 
-  /* ── Header ── */
   header {
     padding: 56px 0 36px;
     border-bottom: 1px solid var(--border);
@@ -72,7 +69,6 @@
     font-weight: 300;
   }
 
-  /* ── Two-column layout ── */
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -81,7 +77,6 @@
   }
   @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
 
-  /* ── Cards ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -98,7 +93,6 @@
   }
   .card-title svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-  /* ── Form elements ── */
   label {
     display: block;
     font-size: 0.78rem;
@@ -122,15 +116,12 @@
     outline: none;
     margin-bottom: 14px;
   }
-  input[type="text"]:focus, select:focus {
-    border-color: var(--accent);
-  }
+  input[type="text"]:focus, select:focus { border-color: var(--accent); }
   select option { background: var(--surface); }
 
   .row { display: flex; gap: 12px; }
   .row > * { flex: 1; }
 
-  /* ── Drop zone ── */
   .dropzone {
     border: 2px dashed var(--border);
     border-radius: var(--radius);
@@ -152,7 +143,6 @@
   .dropzone-text { color: var(--muted); font-size: 0.88rem; }
   .dropzone-text strong { color: var(--text); }
 
-  /* ── File list ── */
   #file-list {
     margin-top: 12px;
     display: flex; flex-direction: column; gap: 6px;
@@ -174,11 +164,7 @@
   .file-item .dot.no-exif { background: var(--muted); }
   .file-item span { color: var(--muted); margin-left: auto; font-size: 0.72rem; }
 
-  /* ── Preview canvas ── */
-  #preview-wrap {
-    grid-column: 1 / -1;
-    display: none;
-  }
+  #preview-wrap { grid-column: 1 / -1; display: none; }
   #preview-wrap.visible { display: block; }
   #preview-title {
     font-family: Arial, sans-serif; font-weight: bold;
@@ -207,7 +193,6 @@
   .preview-nav button:hover { border-color: var(--accent); color: var(--accent); }
   #preview-counter { color: var(--muted); font-size: 0.85rem; }
 
-  /* ── Buttons ── */
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     border: none; border-radius: 8px;
@@ -217,24 +202,12 @@
     transition: all 0.18s;
     text-decoration: none;
   }
-  .btn-primary {
-    background: var(--accent);
-    color: #0f0f11;
-  }
+  .btn-primary { background: var(--accent); color: #0f0f11; }
   .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
   .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); }
-
-  .btn-download {
-    background: var(--accent2);
-    color: #0f0f11;
-  }
+  .btn-download { background: var(--accent2); color: #0f0f11; }
   .btn-download:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
   .actions {
@@ -243,88 +216,13 @@
     align-items: center;
   }
 
-  /* ── Status bar ── */
-  #status {
-    grid-column: 1 / -1;
-    font-size: 0.85rem;
-    color: var(--muted);
-    display: none;
-  }
+  #status { grid-column: 1 / -1; font-size: 0.85rem; color: var(--muted); display: none; }
   #status.visible { display: block; }
-  #progress-bar-wrap {
-    background: var(--border);
-    border-radius: 999px;
-    height: 4px;
-    margin-top: 6px;
-  }
-  #progress-bar {
-    background: var(--accent);
-    height: 4px;
-    border-radius: 999px;
-    width: 0%;
-    transition: width 0.2s;
-  }
+  #progress-bar-wrap { background: var(--border); border-radius: 999px; height: 4px; margin-top: 6px; }
+  #progress-bar { background: var(--accent); height: 4px; border-radius: 999px; width: 0%; transition: width 0.2s; }
 
-  /* ── Download section ── */
-  #download-section {
-    grid-column: 1 / -1;
-    display: none;
-  }
+  #download-section { grid-column: 1 / -1; display: none; }
   #download-section.visible { display: block; }
-
-  /* ── CLI card ── */
-  .cli-section {
-    margin-top: 40px;
-    padding-bottom: 60px;
-  }
-  .cli-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .cli-header {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 16px;
-    display: flex; align-items: center; gap: 8px;
-    font-family: Arial, monospace;
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
-  .cli-dot { width: 10px; height: 10px; border-radius: 50%; }
-  pre {
-    padding: 20px;
-    font-family: Arial, monospace;
-    font-size: 0.85rem;
-    line-height: 1.7;
-    overflow-x: auto;
-    color: var(--text);
-  }
-  .kw { color: var(--accent); }
-  .cm { color: var(--muted); font-style: italic; }
-  .val { color: var(--accent2); }
-  .flag { color: var(--success); }
-
-  .install-steps {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px; margin: 20px 0;
-  }
-  .step {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-  }
-  .step-num {
-    font-family: Arial, sans-serif; font-weight: bold;
-    font-size: 2rem;
-    color: var(--border);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .step-label { font-size: 0.82rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-  .step-desc { font-size: 0.88rem; color: var(--text); }
 
   footer {
     border-top: 1px solid var(--border);
@@ -333,9 +231,7 @@
     font-size: 0.82rem;
     text-align: center;
   }
-  footer a { color: var(--accent2); text-decoration: none; }
 
-  /* ── Scrollbar ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -347,10 +243,9 @@
 
   <header>
     <div class="logo">Photo<span>Stamp</span></div>
-    <div class="tagline">Overlay EXIF date/time &amp; your name onto photos — right in the browser, no upload needed.</div>
+    <div class="tagline">Overlay EXIF date/time onto photos — right in the browser, no upload needed.</div>
   </header>
 
-  <!-- ════════════════════════ BROWSER TOOL ════════════════════════ -->
   <div class="grid" style="margin-top:40px">
 
     <!-- Left: controls -->
@@ -374,10 +269,10 @@
           <label>Font size</label>
           <select id="fontsize">
             <option value="auto" selected>Auto</option>
-            <option value="18">Small (18px)</option>
-            <option value="24">Medium (24px)</option>
-            <option value="32">Large (32px)</option>
-            <option value="48">XL (48px)</option>
+            <option value="36">Small (36px)</option>
+            <option value="60">Medium (60px)</option>
+            <option value="90">Large (90px)</option>
+            <option value="130">XL (130px)</option>
           </select>
         </div>
       </div>
@@ -460,7 +355,6 @@
 
   </div>
 
-
 </div>
 
 <footer>
@@ -471,23 +365,15 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-/* ──────────────────────────────────────────────────────────────────
-   PhotoStamp — browser-side logic
-   Uses: Canvas API + exifr (CDN) for EXIF reading
-────────────────────────────────────────────────────────────────── */
-
-// We'll read EXIF in a lightweight way using FileReader + DataView
-// (no external CDN needed — pure browser)
-
-const fileInput   = document.getElementById('file-input');
-const dropzone    = document.getElementById('dropzone');
-const fileList    = document.getElementById('file-list');
-const processBtn  = document.getElementById('process-btn');
-const clearBtn    = document.getElementById('clear-btn');
-const statusEl    = document.getElementById('status');
-const statusText  = document.getElementById('status-text');
-const progressBar = document.getElementById('progress-bar');
-const previewWrap = document.getElementById('preview-wrap');
+const fileInput     = document.getElementById('file-input');
+const dropzone      = document.getElementById('dropzone');
+const fileList      = document.getElementById('file-list');
+const processBtn    = document.getElementById('process-btn');
+const clearBtn      = document.getElementById('clear-btn');
+const statusEl      = document.getElementById('status');
+const statusText    = document.getElementById('status-text');
+const progressBar   = document.getElementById('progress-bar');
+const previewWrap   = document.getElementById('preview-wrap');
 const previewCanvas = document.getElementById('preview-canvas');
 const previewCounter = document.getElementById('preview-counter');
 const downloadSection = document.getElementById('download-section');
@@ -497,7 +383,7 @@ let files = [];
 let processedBlobs = [];
 let previewIndex = 0;
 
-// ── EXIF date extraction (pure JS, no CDN) ──────────────────────
+// ── EXIF date extraction ─────────────────────────────────────────
 function readExifDate(file) {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -505,57 +391,40 @@ function readExifDate(file) {
       try {
         const buf = e.target.result;
         const view = new DataView(buf);
-        // Find APP1 marker (FF E1) and scan for DateTimeOriginal tag (0x9003)
         let offset = 2;
         while (offset < view.byteLength - 4) {
           const marker = view.getUint16(offset);
           if (marker === 0xFFE1) {
             const app1Len = view.getUint16(offset + 2);
-            // Check for Exif header
             const exifHeader = String.fromCharCode(
               view.getUint8(offset+4), view.getUint8(offset+5),
               view.getUint8(offset+6), view.getUint8(offset+7)
             );
             if (exifHeader === 'Exif') {
               const tiffStart = offset + 10;
-              const endian = view.getUint16(tiffStart) === 0x4949 ? true : false; // little endian?
-              const getUint16 = (o) => endian ? view.getUint16(tiffStart+o, true) : view.getUint16(tiffStart+o, false);
-              const getUint32 = (o) => endian ? view.getUint32(tiffStart+o, true) : view.getUint32(tiffStart+o, false);
-
-              // IFD0 offset
+              const endian = view.getUint16(tiffStart) === 0x4949;
+              const getUint16 = o => endian ? view.getUint16(tiffStart+o, true) : view.getUint16(tiffStart+o, false);
+              const getUint32 = o => endian ? view.getUint32(tiffStart+o, true) : view.getUint32(tiffStart+o, false);
               const ifd0Off = getUint32(4);
               const ifd0Count = getUint16(ifd0Off);
-
-              // Look for ExifIFD pointer (0x8769) in IFD0
               let exifIFDOff = -1;
               for (let i = 0; i < ifd0Count; i++) {
                 const entryOff = ifd0Off + 2 + i * 12;
-                const tag = getUint16(entryOff);
-                if (tag === 0x8769) {
-                  exifIFDOff = getUint32(entryOff + 8);
-                  break;
-                }
+                if (getUint16(entryOff) === 0x8769) { exifIFDOff = getUint32(entryOff + 8); break; }
               }
-
               if (exifIFDOff >= 0) {
                 const exifCount = getUint16(exifIFDOff);
                 for (let i = 0; i < exifCount; i++) {
                   const entryOff = exifIFDOff + 2 + i * 12;
                   const tag = getUint16(entryOff);
-                  if (tag === 0x9003 || tag === 0x9004) { // DateTimeOriginal / Digitized
+                  if (tag === 0x9003 || tag === 0x9004) {
                     const valOff = getUint32(entryOff + 8);
                     let dateStr = '';
-                    for (let c = 0; c < 19; c++) {
-                      dateStr += String.fromCharCode(view.getUint8(tiffStart + valOff + c));
-                    }
-                    // Parse "2024:06:15 14:32:00"
+                    for (let c = 0; c < 19; c++) dateStr += String.fromCharCode(view.getUint8(tiffStart + valOff + c));
                     const m = dateStr.match(/(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/);
                     if (m) {
                       const dt = new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], +m[6]);
-                      resolve(dt.toLocaleString('en-US', {
-                        year:'numeric', month:'long', day:'2-digit',
-                        hour:'2-digit', minute:'2-digit'
-                      }));
+                      resolve(dt.toLocaleString('en-US', { year:'numeric', month:'long', day:'2-digit', hour:'2-digit', minute:'2-digit' }));
                       return;
                     }
                   }
@@ -565,30 +434,23 @@ function readExifDate(file) {
             offset += 2 + app1Len;
           } else if ((marker & 0xFF00) === 0xFF00) {
             offset += 2 + view.getUint16(offset + 2);
-          } else {
-            break;
-          }
+          } else { break; }
         }
       } catch(err) {}
       resolve(null);
     };
-    reader.readAsArrayBuffer(file.slice(0, 65536)); // Read only first 64KB
+    reader.readAsArrayBuffer(file.slice(0, 65536));
   });
 }
 
-// ── Drag & drop ─────────────────────────────────────────────────
+// ── Drag & drop ──────────────────────────────────────────────────
 dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('over'); });
 dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
-dropzone.addEventListener('drop', e => {
-  e.preventDefault(); dropzone.classList.remove('over');
-  handleFiles([...e.dataTransfer.files]);
-});
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('over'); handleFiles([...e.dataTransfer.files]); });
 fileInput.addEventListener('change', () => handleFiles([...fileInput.files]));
 
 async function handleFiles(newFiles) {
-  const imgs = newFiles.filter(f =>
-    f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp|tiff?|bmp|avif)$/i.test(f.name)
-  );
+  const imgs = newFiles.filter(f => f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp|tiff?|bmp|avif)$/i.test(f.name));
   if (!imgs.length) return;
   for (const f of imgs) {
     const date = await readExifDate(f);
@@ -610,11 +472,9 @@ function addFileItem(f, date) {
   fileList.appendChild(div);
 }
 
-
 clearBtn.addEventListener('click', () => {
   files = []; processedBlobs = [];
-  fileList.innerHTML = '';
-  fileInput.value = '';
+  fileList.innerHTML = ''; fileInput.value = '';
   processBtn.disabled = true;
   downloadSection.classList.remove('visible');
   previewWrap.classList.remove('visible');
@@ -622,7 +482,7 @@ clearBtn.addEventListener('click', () => {
   downloadLinks.innerHTML = '';
 });
 
-// ── Stamp on canvas ─────────────────────────────────────────────
+// ── Stamp on canvas ──────────────────────────────────────────────
 function stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity) {
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;
@@ -631,30 +491,33 @@ function stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity) {
   ctx.drawImage(img, 0, 0);
 
   const w = canvas.width, h = canvas.height;
-  const auto_fs = fontSize === 'auto' ? Math.max(16, Math.round(Math.min(w, h) * 0.025)) : parseInt(fontSize);
+
+  // Auto size: 6% of the shorter dimension, minimum 48px
+  const auto_fs = fontSize === 'auto'
+    ? Math.max(48, Math.round(Math.min(w, h) * 0.06))
+    : parseInt(fontSize);
+
   const pad = Math.round(auto_fs * 0.6);
   const lineSpacing = Math.round(auto_fs * 0.3);
 
   ctx.font = `bold ${auto_fs}px Arial, sans-serif`;
   ctx.textBaseline = 'top';
 
-  const lines = [
-    dateStr || 'Date/time: not available'
-  ];
+  const lines = [ dateStr || 'Date/time: not available' ];
 
   const lineWidths = lines.map(l => ctx.measureText(l).width);
   const blockW = Math.max(...lineWidths) + pad * 2;
   const lineH = auto_fs * 1.25;
   const blockH = lineH * lines.length + lineSpacing * (lines.length - 1) + pad * 2;
 
-  const margin = Math.round(Math.min(w, h) * 0.02);
+  const margin = Math.round(Math.min(w, h) * 0.03);
   let bx, by;
-  if (position === 'topleft')     { bx = margin;           by = margin; }
-  else if (position === 'topright') { bx = w - blockW - margin; by = margin; }
-  else if (position === 'bottomleft') { bx = margin;        by = h - blockH - margin; }
-  else                            { bx = w - blockW - margin; by = h - blockH - margin; }
+  if      (position === 'topleft')     { bx = margin;               by = margin; }
+  else if (position === 'topright')    { bx = w - blockW - margin;  by = margin; }
+  else if (position === 'bottomleft')  { bx = margin;               by = h - blockH - margin; }
+  else                                 { bx = w - blockW - margin;  by = h - blockH - margin; }
 
-  // Draw rounded rect background
+  // Rounded rect background
   const r = auto_fs * 0.4;
   ctx.fillStyle = `rgba(0,0,0,${parseInt(opacity)/255})`;
   ctx.beginPath();
@@ -670,7 +533,7 @@ function stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity) {
   ctx.closePath();
   ctx.fill();
 
-  // Draw text
+  // Text
   const [cr, cg, cb] = textColor.split(',').map(Number);
   ctx.fillStyle = `rgb(${cr},${cg},${cb})`;
   let cy = by + pad;
@@ -687,17 +550,17 @@ function loadImage(file) {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => { resolve(img); URL.revokeObjectURL(url); };
-    img.onerror = (e) => { URL.revokeObjectURL(url); reject(new Error(`Failed to load image: ${file.name}`)); };
+    img.onerror = e => { URL.revokeObjectURL(url); reject(new Error(`Failed to load: ${file.name}`)); };
     img.src = url;
   });
 }
 
-// ── Process ─────────────────────────────────────────────────────
+// ── Process ──────────────────────────────────────────────────────
 processBtn.addEventListener('click', async () => {
-  const position = document.getElementById('position').value;
-  const fontSize = document.getElementById('fontsize').value;
+  const position  = document.getElementById('position').value;
+  const fontSize  = document.getElementById('fontsize').value;
   const textColor = document.getElementById('textcolor').value;
-  const opacity = document.getElementById('opacity').value;
+  const opacity   = document.getElementById('opacity').value;
 
   processedBlobs = [];
   downloadLinks.innerHTML = '';
@@ -709,14 +572,12 @@ processBtn.addEventListener('click', async () => {
   for (let i = 0; i < files.length; i++) {
     statusText.textContent = `Processing ${i+1} of ${files.length}: ${files[i].name}`;
     progressBar.style.width = `${Math.round((i / files.length) * 100)}%`;
-
     try {
-      const img = await loadImage(files[i]);
+      const img    = await loadImage(files[i]);
       const canvas = stampOnCanvas(img, files[i]._exifDate, position, fontSize, textColor, opacity);
-      const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.93));
+      const blob   = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.93));
       processedBlobs.push({ name: files[i].name, blob });
 
-      // Download link
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = `stamped_${files[i].name}`;
@@ -733,12 +594,7 @@ processBtn.addEventListener('click', async () => {
   statusText.textContent = `Done — ${processedBlobs.length} photo${processedBlobs.length !== 1 ? 's' : ''} stamped.`;
   downloadSection.classList.add('visible');
 
-  // Show preview of first image
-  if (processedBlobs.length > 0) {
-    previewIndex = 0;
-    showPreview(0);
-    previewWrap.classList.add('visible');
-  }
+  if (processedBlobs.length > 0) { previewIndex = 0; showPreview(0); previewWrap.classList.add('visible'); }
 });
 
 async function showPreview(idx) {
@@ -748,8 +604,7 @@ async function showPreview(idx) {
   img.onload = () => {
     previewCanvas.width = img.naturalWidth;
     previewCanvas.height = img.naturalHeight;
-    const ctx = previewCanvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
+    previewCanvas.getContext('2d').drawImage(img, 0, 0);
     URL.revokeObjectURL(url);
   };
   img.src = url;
@@ -759,36 +614,19 @@ async function showPreview(idx) {
 document.getElementById('download-all-btn').addEventListener('click', async () => {
   if (!processedBlobs.length) return;
   const btn = document.getElementById('download-all-btn');
-  btn.disabled = true;
-  btn.textContent = 'Zipping…';
-
+  btn.disabled = true; btn.textContent = 'Zipping…';
   const zip = new JSZip();
-  for (const { name, blob } of processedBlobs) {
-    const safeName = `stamped_${name.replace(/\.heic$/i, '.jpg')}`;
-    zip.file(safeName, blob);
-  }
-
+  for (const { name, blob } of processedBlobs) zip.file(`stamped_${name.replace(/\.heic$/i, '.jpg')}`, blob);
   const zipBlob = await zip.generateAsync({ type: 'blob' });
   const url = URL.createObjectURL(zipBlob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'stamped_photos.zip';
-  a.click();
+  const a = document.createElement('a'); a.href = url; a.download = 'stamped_photos.zip'; a.click();
   URL.revokeObjectURL(url);
-
   btn.disabled = false;
   btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download all`;
 });
 
-
-document.getElementById('prev-btn').addEventListener('click', () => {
-  previewIndex = Math.max(0, previewIndex - 1);
-  showPreview(previewIndex);
-});
-document.getElementById('next-btn').addEventListener('click', () => {
-  previewIndex = Math.min(processedBlobs.length - 1, previewIndex + 1);
-  showPreview(previewIndex);
-});
+document.getElementById('prev-btn').addEventListener('click', () => { previewIndex = Math.max(0, previewIndex - 1); showPreview(previewIndex); });
+document.getElementById('next-btn').addEventListener('click', () => { previewIndex = Math.min(processedBlobs.length - 1, previewIndex + 1); showPreview(previewIndex); });
 </script>
 </body>
 </html>
