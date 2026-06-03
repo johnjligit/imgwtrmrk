@@ -407,9 +407,9 @@
       </div>
 
       <div class="dropzone" id="dropzone">
-        <input type="file" id="file-input" accept="image/*,.heic,.HEIC" multiple />
+        <input type="file" id="file-input" accept="image/*" multiple />
         <div class="dropzone-icon">🖼️</div>
-        <div class="dropzone-text"><strong>Click or drag images here</strong><br>JPG, PNG, TIFF, WebP, HEIC supported</div>
+        <div class="dropzone-text"><strong>Click or drag images here</strong><br>JPG, PNG, TIFF, WebP supported</div>
       </div>
 
       <div id="file-list"></div>
@@ -469,7 +469,6 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 /* ──────────────────────────────────────────────────────────────────
@@ -587,57 +586,30 @@ dropzone.addEventListener('drop', e => {
 fileInput.addEventListener('change', () => handleFiles([...fileInput.files]));
 
 async function handleFiles(newFiles) {
-  const validExts = /\.(jpe?g|png|gif|webp|tiff?|bmp|heic|heif|avif)$/i;
   const imgs = newFiles.filter(f =>
-    f.type.startsWith('image/') || validExts.test(f.name)
+    f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp|tiff?|bmp|avif)$/i.test(f.name)
   );
   if (!imgs.length) return;
-
   for (const f of imgs) {
-    let processFile = f;
-    // Convert HEIC to JPEG
-    if (f.name.toLowerCase().endsWith('.heic') || f.type === 'image/heic' || f.type === 'image/heif') {
-      try {
-        addFileItem(f, null, true); // show converting state
-        const converted = await heic2any({ blob: f, toType: 'image/jpeg', quality: 0.93 });
-        const jpegBlob = Array.isArray(converted) ? converted[0] : converted;
-        processFile = new File([jpegBlob], f.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' });
-        processFile._originalName = f.name;
-      } catch(e) {
-        console.error('HEIC conversion failed:', e);
-        continue;
-      }
-    }
-    const date = await readExifDate(processFile);
-    processFile._exifDate = date;
-    if (!processFile._originalName) addFileItem(processFile, date);
-    else updateFileItem(processFile._originalName, date);
-    files.push(processFile);
+    const date = await readExifDate(f);
+    f._exifDate = date;
+    addFileItem(f, date);
+    files.push(f);
   }
-  processBtn.disabled = files.length === 0;
+  processBtn.disabled = false;
 }
 
-function addFileItem(f, date, converting = false) {
+function addFileItem(f, date) {
   const div = document.createElement('div');
   div.className = 'file-item';
-  div.id = `fi-${f.name}`;
   div.innerHTML = `
     <div class="dot ${date ? '' : 'no-exif'}"></div>
     <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>
-    <span>${converting ? '⏳ converting…' : (date || 'no EXIF')}</span>
+    <span>${date || 'no EXIF'}</span>
   `;
   fileList.appendChild(div);
 }
 
-function updateFileItem(originalName, date) {
-  const jpgName = originalName.replace(/\.heic$/i, '.jpg');
-  const div = document.getElementById(`fi-${originalName}`);
-  if (div) {
-    div.querySelector('.dot').className = `dot ${date ? '' : 'no-exif'}`;
-    div.querySelector('span:first-of-type').textContent = jpgName;
-    div.querySelectorAll('span')[1].textContent = date || 'no EXIF';
-  }
-}
 
 clearBtn.addEventListener('click', () => {
   files = []; processedBlobs = [];
@@ -715,7 +687,7 @@ function loadImage(file) {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => { resolve(img); URL.revokeObjectURL(url); };
-    img.onerror = reject;
+    img.onerror = (e) => { URL.revokeObjectURL(url); reject(new Error(`Failed to load image: ${file.name}`)); };
     img.src = url;
   });
 }
@@ -753,6 +725,7 @@ processBtn.addEventListener('click', async () => {
       downloadLinks.appendChild(a);
     } catch(e) {
       console.error(e);
+      statusText.textContent = `Error: ${e.message}`;
     }
   }
 
@@ -808,6 +781,7 @@ document.getElementById('download-all-btn').addEventListener('click', async () =
 });
 
 
+document.getElementById('prev-btn').addEventListener('click', () => {
   previewIndex = Math.max(0, previewIndex - 1);
   showPreview(previewIndex);
 });
