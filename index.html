@@ -275,9 +275,16 @@
             <option value="60">Medium (60px)</option>
             <option value="90">Large (90px)</option>
             <option value="130">XL (130px)</option>
+            <option value="200">XXL (200px)</option>
           </select>
         </div>
       </div>
+
+      <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:normal;font-size:0.88rem;cursor:pointer;">
+        <input type="checkbox" id="override-text" style="width:auto;margin:0;accent-color:var(--accent);">
+        Override with custom text
+      </label>
+      <input type="text" id="custom-text-input" placeholder="Enter custom text..." style="display:none;" />
 
       <label>Text color</label>
       <select id="textcolor">
@@ -389,6 +396,11 @@ const downloadLinks = document.getElementById('download-links');
 let files = [];
 let processedBlobs = [];
 let previewIndex = 0;
+
+// ── Toggle custom text input ─────────────────────────────────────
+document.getElementById('override-text').addEventListener('change', (e) => {
+  document.getElementById('custom-text-input').style.display = e.target.checked ? 'block' : 'none';
+});
 
 // ── EXIF date extraction ─────────────────────────────────────────
 function readExifDate(file) {
@@ -502,7 +514,7 @@ clearBtn.addEventListener('click', () => {
 });
 
 // ── Stamp on canvas ──────────────────────────────────────────────
-function stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity) {
+function stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity, customText) {
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;
   canvas.height = img.naturalHeight;
@@ -522,7 +534,7 @@ function stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity) {
   ctx.font = `bold ${auto_fs}px Arial, sans-serif`;
   ctx.textBaseline = 'top';
 
-  const lines = [ dateStr || 'Date/time: not available' ];
+  const lines = [ customText || dateStr || 'Date/time: not available' ];
 
   const lineWidths = lines.map(l => ctx.measureText(l).width);
   const blockW = Math.max(...lineWidths) + pad * 2;
@@ -585,6 +597,8 @@ processBtn.addEventListener('click', async () => {
   const textColor  = document.getElementById('textcolor').value;
   const opacity    = document.getElementById('opacity').value;
   const includeYear = document.getElementById('include-year').checked;
+  const useCustomText = document.getElementById('override-text').checked;
+  const customText = useCustomText ? document.getElementById('custom-text-input').value : null;
 
   processedBlobs = [];
   downloadLinks.innerHTML = '';
@@ -599,7 +613,7 @@ processBtn.addEventListener('click', async () => {
     try {
       const img    = await loadImage(files[i]);
       const dateStr = formatStampDate(files[i]._exifDateObj, includeYear);
-      const canvas = stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity);
+      const canvas = stampOnCanvas(img, dateStr, position, fontSize, textColor, opacity, customText);
       const blob   = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.93));
       processedBlobs.push({ name: files[i].name, blob });
 
